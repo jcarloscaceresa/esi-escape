@@ -1,0 +1,3 @@
+echo "esiescape" >> .gitignore
+echo "*.o" >> .gitignore
+echo ".DS_Store" >> .gitignore
