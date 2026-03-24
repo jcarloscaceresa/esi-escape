@@ -22,7 +22,7 @@ int iniciarSesion(Partida *estado) {
         if (strcmp(estado->jugadores[i].Jugador, usuario_input) == 0 &&
             strcmp(estado->jugadores[i].Contrasena, contrasena_input) == 0) {
             
-            // Si coincide, guardamos el puntero al jugador actual
+            // Si coincide, guardamos el puntero al jugaaador actual
             estado->jugador_actual = &estado->jugadores[i];
             printf("\n¡Bienvenido de nuevo, %s!\n", estado->jugador_actual->Nomb_jugador);
             return 1; // Éxito
@@ -70,7 +70,6 @@ void mostrarMenuPartida(Partida *estado) {
     } while (opcion != 3);
 }
 
-// 3. MENÚ PRINCIPAL (El que se lanza desde el main)
 void mostrarMenuPrincipal(Partida *estado) {
     int opcion;
     do {
@@ -105,4 +104,12 @@ void mostrarMenuPrincipal(Partida *estado) {
                 printf("Opcion no valida. Intentalo de nuevo.\n");
         }
     } while (opcion != 3);
+}
+
+
+// 4. FUNCIÓN PRINCIPAL
+int main() {
+    Partida estado = {0}; // Inicializa la estructura a cero
+    mostrarMenuPrincipal(&estado);
+    return 0;
 }

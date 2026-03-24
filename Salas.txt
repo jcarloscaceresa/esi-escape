@@ -1,0 +1,4 @@
+01-Conserjería-NORMAL-Pequeño habitáculo con mostrador a la entrada
+02-Escalera principal-NORMAL-Escalera principal de subida a la primera planta
+03-Cafetería-NORMAL-Cafetería situada en la primera planta
+30-Exterior-SALIDA-La salida al exterior está aquí
