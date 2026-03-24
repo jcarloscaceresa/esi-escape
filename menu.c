@@ -105,11 +105,3 @@ void mostrarMenuPrincipal(Partida *estado) {
         }
     } while (opcion != 3);
 }
-
-
-// 4. FUNCIÓN PRINCIPAL
-int main() {
-    Partida estado = {0}; // Inicializa la estructura a cero
-    mostrarMenuPrincipal(&estado);
-    return 0;
-}
