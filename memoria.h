@@ -3,8 +3,8 @@
 #include "ficheros.h"
 
 // Funciones para volcar información de ficheros a memoria dinámica
-void cargarDatosMemoria(Partida *estado);
-void guardarDatosFicheros(Partida *estado);
-void liberarDatosMemoria(Partida *estado);
+void cargarDatosMemoria(Partida *Estado);
+void guardarDatosFicheros(Partida *Estado);
+void liberarDatosMemoria(Partida *Estado);
 
 #endif
