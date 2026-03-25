@@ -6,8 +6,7 @@
 #include "memoria.h"
 #include "acciones.h"
 
-// 1. FUNCIÓN DE INICIO DE SESIÓN
-int iniciarSesion(Partida *estado) {
+int iniciar_sesion(Partida *estado) {
     char usuario_input[11];
     char contrasena_input[9];
 
@@ -17,63 +16,61 @@ int iniciarSesion(Partida *estado) {
     printf("Contrasena: ");
     scanf("%8s", contrasena_input);
 
-    // Recorremos el vector dinámico de jugadores buscando coincidencia
-    for (int i = 0; i < estado->num_jugadores; i++) {
-        if (strcmp(estado->jugadores[i].Jugador, usuario_input) == 0 &&
-            strcmp(estado->jugadores[i].Contrasena, contrasena_input) == 0) {
+    // 1. Abrimos el fichero directamente
+    FILE *f = fopen("Jugadores.txt", "r");
+    if (f == NULL) {
+        printf("\nError: No se pudo abrir la base de datos de jugadores.\n");
+        return 0; 
+    }
+
+    char linea[150];
+    // 2. Leemos línea a línea hasta el final del fichero
+    while (fgets(linea, sizeof(linea), f)) {
+        // Limpiamos el salto de línea al final de la línea leída (¡SÚPER IMPORTANTE!)
+        linea[strcspn(linea, "\r\n")] = 0;
+
+        // 3. Cortamos la línea por los guiones. Suponiendo formato: Id-Nombre-Usuario-Contraseña
+        char *id_str     = strtok(linea, "-");
+        char *nombre_txt = strtok(NULL, "-");
+        char *user_txt   = strtok(NULL, "-");
+        char *pass_txt   = strtok(NULL, "-");
+
+        // Verificamos que la línea tenía todas las partes antes de comparar
+        if (user_txt != NULL && pass_txt != NULL) {
             
-            // Si coincide, guardamos el puntero al jugaaador actual
-            estado->jugador_actual = &estado->jugadores[i];
-            printf("\n¡Bienvenido de nuevo, %s!\n", estado->jugador_actual->Nomb_jugador);
-            return 1; // Éxito
+            // 4. Comparamos lo que hay en el .txt con lo que tecleó el usuario
+            if (strcmp(user_txt, usuario_input) == 0 && strcmp(pass_txt, contrasena_input) == 0) {
+                
+                // ¡COINCIDENCIA! 
+                // Reservamos memoria SÓLO para este jugador en la mesa de trabajo
+                estado->jugador_actual = (Jugadores *)malloc(sizeof(Jugadores));
+                
+                // Copiamos los datos del txt a la memoria dinámica del jugador
+                estado->jugador_actual->Id_jugador = atoi(id_str);
+                strncpy(estado->jugador_actual->Nomb_jugador, nombre_txt, 20);
+                strncpy(estado->jugador_actual->Jugador, user_txt, 10);
+                strncpy(estado->jugador_actual->Contrasena, pass_txt, 8);
+                estado->jugador_actual->Inventario = NULL; // Esto se cargará luego si carga partida
+
+                printf("\n¡Bienvenido de nuevo, %s!\n", estado->jugador_actual->Nomb_jugador);
+                
+                fclose(f); // Cerramos el cajón
+                return 1;  // Éxito
+            }
         }
     }
-    
+
+    // Si el bucle termina y no ha devuelto 1, es que no lo encontró
+    fclose(f);
     printf("\nError: Usuario o contrasena incorrectos.\n");
-    return 0; // Fallo
+    return 0;
 }
 
-// 2. MENÚ SECUNDARIO (Una vez iniciada la sesión)
-void mostrarMenuPartida(Partida *estado) {
-    int opcion;
-    do {
-        printf("\n--- MENU DE PARTIDA ---\n");
-        printf("1. Nueva Partida\n");
-        printf("2. Cargar Partida\n");
-        printf("3. Cerrar Sesion\n");
-        printf("Elige una opcion: ");
-        
-        // Comprobamos que el usuario meta un número
-        if (scanf("%d", &opcion) != 1) {
-            while (getchar() != '\n'); // Limpiamos el buffer si mete letras
-            opcion = 0;
-        }
-
-        switch(opcion) {
-            case 1:
-                printf("\nPreparando nueva partida...\n");
-                // iniciarNuevaPartida(estado); // (Esta función irá en acciones.c)
-                // mostrarMenuAcciones(estado); // (El bucle del juego real)
-                break;
-            case 2:
-                printf("\nCargando tu partida guardada...\n");
-                // cargarPartidaGuardada(estado, "Partida.txt"); // (En gestionMemoria.c)
-                // mostrarMenuAcciones(estado);
-                break;
-            case 3:
-                printf("\nCerrando sesion de %s...\n", estado->jugador_actual->Jugador);
-                estado->jugador_actual = NULL; // Borramos el rastro por seguridad
-                break;
-            default:
-                printf("Opcion no valida. Intentalo de nuevo.\n");
-        }
-    } while (opcion != 3);
-}
-
-void mostrarMenuPrincipal(Partida *estado) {
+void mostrar_menu_principal(Partida *estado) {
     int opcion;
     do {
         printf("\n=========================\n");
+        printf("   Bienvenido al juego   \n");
         printf("       ESI ESCAPE        \n");
         printf("=========================\n");
         printf("1. Iniciar Sesion\n");
@@ -89,19 +86,19 @@ void mostrarMenuPrincipal(Partida *estado) {
         switch(opcion) {
             case 1:
                 // Si el inicio de sesión devuelve 1 (Éxito), entramos al submenú
-                if (iniciarSesion(estado)) {
-                    mostrarMenuPartida(estado);
+                if (iniciar_sesion(estado)) {
+                    // void menu_de_partida(); Llamada a la función de acciones.c para abrir el menú de la sala.
                 }
                 break;
             case 2:
                 printf("\n[Funcion de registro en construccion...]\n");
-                // registrarJugador(estado); 
+                // registrar_jugador(estado); 
                 break;
             case 3:
                 printf("\nSaliendo del juego... ¡Hasta la proxima!\n");
                 break;
             default:
-                printf("Opcion no valida. Intentalo de nuevo.\n");
+                printf("\nOpcion no valida. Intentalo de nuevo.\n");
         }
     } while (opcion != 3);
 }

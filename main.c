@@ -9,7 +9,7 @@ int main() {
     //cargarDatosMemoria(&estado);
 
     // 2. Lanzamos el menú principal (que ya se encarga de llamar al resto) (menu.h)
-    mostrarMenuPrincipal(&estado);
+    mostrar_menu_principal(&estado);
 
     // 3. Al salir del menú, limpiamos la RAM antes de cerrar (memoria.h)
     //liberarDatosMemoria(&estado);

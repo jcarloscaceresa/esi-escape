@@ -4,9 +4,8 @@
 #include "ficheros.h" // Imprescindible porque usamos la estructura "Partida"
 
 // Prototipos de las funciones que gestionan la interfaz de usuario
-int iniciarSesion(Partida *estado);
-void mostrarMenuPartida(Partida *estado);
-void mostrarMenuPrincipal(Partida *estado);
-void registrarJugador(Partida *estado);
+int iniciar_sesion(Partida *estado);
+void mostrar_menu_principal(Partida *estado);
+void registrar_jugador(Partida *estado);
 
 #endif
