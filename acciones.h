@@ -1,9 +1,19 @@
-void menu_de_partida(char *Id_sala, Salas *salas, int num_salas, Objetos *objetos, int num_objetos, Conexiones *conexiones, int num_conexiones, Puzles *puzle, int num_puzles);
-void describir(char *Id_sala, Salas *salas, int num_salas);
-void examinar(char *Id_sala, Salas *salas, int num_salas, Conexiones *conexiones, int num_conexiones, Objetos *objetos, int num_objetos)
-void entrar_sala(char *Id_sala, Salas *salas, int num_salas, Conexiones *conexiones, int num_conexiones);
-void coger_objeto(char *Id_sala, Objetos *objetos, int num_objetos);
-void soltar_objeto(char *Id_sala, Objetos *objetos, int num_objetos);
-void inventario(Objetos *objetos, int num_objetos);
-void usar_objeto(char *Id_sala, Objetos *objeto, int num_objetos, Conexiones *conexion, int num_conexiones);
-void resolver(char *Id_sala, Puzles *puzle, int num_puzles, Conexiones *conexion, int num_conexiones);
+#ifndef ACCIONES_H
+#define ACCIONES_H
+#include "ficheros.h"
+
+// Función principal del menú de la partida
+void menu_de_partida(Partida *estado);
+
+// Subacciones
+void describir(Partida *estado);
+void examinar(Partida *estado);
+void entrar_sala(Partida *estado);
+void coger_objeto(Partida *estado);
+void soltar_objeto(Partida *estado);
+void inventario(Partida *estado);
+void usar_objeto(Partida *estado);
+void resolver(Partida *estado);
+void guardar_partida(Partida *estado);
+
+#endif

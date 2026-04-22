@@ -1,0 +1,10 @@
+OB01-Tarjeta Laboratorio-Tarjeta con banda magnética de acceso al laboratorio-01
+OB02-Destornillador-Destornillador que sirve para abrir una caja-05
+OB03-Nota arrugada-Papel con números para un puzle-02
+OB04-Pendrive del Alumno-Memoria USB con el código para desbloquear un PC-09
+OB05-Bata Blanca-Prenda necesaria para que te permitan entrar en Química-16
+OB06-Manual de Usuario-Libro técnico que contiene el esquema de un panel-10
+OB07-Llave de Vaso-Herramienta para aflojar los tornillos del motor-08
+OB08-Tarjeta de Cafetería-Tarjeta prepago que activa la máquina de vending-19
+OB09-Mando de Grúa-Control remoto para mover cajas en el muelle-29
+OB10-Credencial de Delegado-Pase especial que abre la Sala de Juntas-25

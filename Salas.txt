@@ -1,4 +1,30 @@
-01-Conserjería-NORMAL-Pequeño habitáculo con mostrador a la entrada
+01-Conserjería-INICIAL-Pequeño habitáculo con mostrador a la entrada
 02-Escalera principal-NORMAL-Escalera principal de subida a la primera planta
 03-Cafetería-NORMAL-Cafetería situada en la primera planta
+04-Salón de Actos-NORMAL-Gran auditorio para eventos y conferencias en planta baja
+05-Secretaría-NORMAL-Oficinas de gestión administrativa y atención al alumno
+06-Pasillo Norte-NORMAL-Distribuidor principal que conecta con los laboratorios
+07-Laboratorio de Electrónica-NORMAL-Espacio equipado con osciloscopios y placas de pruebas
+08-Taller de Mecánica-NORMAL-Zona de máquinas herramienta y prototipado
+09-Aula de Informática-NORMAL-Sala común con puestos de ordenadores para prácticas
+10-Biblioteca-NORMAL-Espacio de estudio silencioso y consulta de fondos bibliográficos
+11-Sala de Estudio-NORMAL-Zona habilitada para el trabajo grupal y autónomo
+12-Despacho de Dirección-NORMAL-Oficina del equipo directivo del centro
+13-Ascensor-NORMAL-Acceso adaptado a las distintas plantas del edificio
+14-Patio Interior-NORMAL-Espacio abierto central que aporta luz natural
+15-Aula Magna-NORMAL-Aula de gran capacidad para las asignaturas troncales
+16-Laboratorio de Química-NORMAL-Área técnica para ensayos de materiales y procesos
+17-Delegación de Alumnos-NORMAL-Sede de los representantes estudiantiles
+18-Copistería-NORMAL-Servicio de fotocopias e impresión de apuntes
+19-Zona de Máquinas-NORMAL-Área de descanso con máquinas de vending
+20-Laboratorio de Automática-NORMAL-Espacio para el control de procesos y robótica
+21-Sala de Grados-NORMAL-Recinto para la defensa de tesis y trabajos fin de grado
+22-Despachos de Profesorado-NORMAL-Área de tutorías y despachos de departamentos
+23-Laboratorio de Informática-NORMAL-Zona dedicada a la informática
+24-Aula Estándar-NORMAL-Aula de docencia teórica con pizarra y proyector
+25-Sala de Juntas-NORMAL-Espacio para reuniones de consejo y departamentos
+26-Laboratorio de Redes-NORMAL-Instalación específica para telecomunicaciones
+27-Aseos-NORMAL-Servicios higiénicos situados en los núcleos de comunicación
+28-Almacén de Material-NORMAL-Depósito de equipos y suministros técnicos
+29-Muelle de Carga-NORMAL-Acceso trasero para recepción de maquinaria pesada
 30-Exterior-SALIDA-La salida al exterior está aquí

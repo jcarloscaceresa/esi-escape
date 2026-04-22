@@ -1,0 +1,15 @@
+P01-Puzle panel-02-Código-Introduce el código en el panel de la pared-4500
+P02-Login PC-09-Palabra-Descifra el usuario administrativo usando la nota arrugada-ADMIN_ESI
+P03-Puerta Taller-08-Código-Suma el número de engranajes expuestos en la vitrina-1224
+P04-Acceso Red-26-Palabra-Ordena los colores de los cables según la norma T568B-BLANCO_NARANJA
+P05-Caja Fuerte-05-Código-Usa el año de inauguración de la escuela grabado en la placa-2014
+P06-Panel Luces-15-Código-Cuenta las filas de asientos de la zona A y zona B-1220
+P07-Vending-19-Palabra-Adivina el producto que falta en la fila C para que caiga la llave-REFRESCO
+P08-Libro Oculto-10-Código-Busca el código de barras del libro de Termodinámica-8892
+P09-Enigma Quím-16-Palabra-Completa el nombre del elemento con número atómico 13-ALUMINIO
+P10-Muelle Carga-29-Código-Introduce la matrícula del camión que aparece en el monitor-7744
+P11-Termostato-23-Código-Ajusta la temperatura a los grados Kelvin del punto de congelación-273
+P12-Sist. Control-20-Palabra-Escribe el nombre del lenguaje de programación del PLC-LADDER
+P13-Actas Grados-21-Palabra-Nombre del primer director de la escuela-ESPINOSA
+P14-Router Wifi-06-Código-Calcula la máscara de subred para 254 hosts-255
+P15-Plano ESI-01-Palabra-Nombre de la ciudad donde se ubica el campus-PUERTO_REAL
