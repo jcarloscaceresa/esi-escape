@@ -68,7 +68,6 @@ void cargarDatosMemoria(Partida *estado) {
             estado->objetos = (Objetos *)realloc(estado->objetos, estado->num_objetos * sizeof(Objetos));
             int i = estado->num_objetos - 1;
 
-            // Formato según PDF: Id_obj-Nomb_obj-Descrip-Localiz [cite: 78-81]
             char *id_obj  = strtok(linea, "-");
             char *nombre  = strtok(NULL, "-");
             char *descrip = strtok(NULL, "-");
@@ -192,7 +191,7 @@ void guardarDatosFicheros(Partida *estado) {
         int copiando = 1; // 1 = Copiamos la línea, 0 = La ignoramos
 
         while (fgets(linea, sizeof(linea), f_orig)) {
-            // Detectamos si empieza el bloque de un jugador [cite: 98]
+            // Detectamos si empieza el bloque de un jugador
             if (strncmp(linea, "JUGADOR:", 8) == 0) {
                 int id_leido;
                 // Extraemos el ID del jugador de esa línea
@@ -219,14 +218,14 @@ void guardarDatosFicheros(Partida *estado) {
     fprintf(f_temp, "\nJUGADOR: %02d\n", id_actual);
     fprintf(f_temp, "SALA: %02d\n", estado->sala_actual_id);
 
-    // Guardar Objetos [cite: 100]
+    // Guardar Objetos
     for (int i = 0; i < estado->num_objetos; i++) {
         if (strcmp(estado->objetos[i].Localiz, "Inventario") == 0) {
             fprintf(f_temp, "OBJETO: %s-%s\n", estado->objetos[i].Id_obj, estado->objetos[i].Localiz);
         }
     }
 
-    // Guardar Conexiones desbloqueadas [cite: 101]
+    // Guardar Conexiones desbloqueadas 
     for (int i = 0; i < estado->num_conexiones; i++) {
         if (strcmp(estado->conexiones[i].Estado, "Activa") == 0) {
             fprintf(f_temp, "CONEXION: %s-%s\n", estado->conexiones[i].Id_conexion, estado->conexiones[i].Estado);

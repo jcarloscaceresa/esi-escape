@@ -70,78 +70,83 @@ int registrar_jugador(Partida *estado) {
     char nuevo_usuario[11];
     char nuevo_nombre[21];
     char nueva_contra[9];
+    char temp[100]; // Búfer temporal para validar longitudes
     int max_id = 0;
     int falta_enter = 0;
     char linea[150];
 
     printf("\n--- REGISTRO DE NUEVO JUGADOR ---\n");
-    printf("Elige un nombre de usuario (max 10 caracteres, sin espacios): ");
-    scanf("%10s", nuevo_usuario);
+    
+    // 1. VALIDACIÓN DEL USUARIO
+    printf("Elige un nombre de usuario (max 10 caracteres): ");
+    scanf("%99s", temp); // Leemos en el temporal
+    if (strlen(temp) > 10) {
+        printf("\nError: El nombre de usuario es demasiado largo (max 10 caracteres).\n");
+        while (getchar() != '\n'); // Limpiar búfer
+        return 0;
+    }
+    strcpy(nuevo_usuario, temp);
 
     // PASO 1: Comprobar si el usuario ya existe y buscar el ID más alto
     FILE *f_lectura = fopen("Jugadores.txt", "r");
     if (f_lectura != NULL) {
         while (fgets(linea, sizeof(linea), f_lectura)) {
-            if (linea[strlen(linea) - 1] != '\n') {
-                falta_enter = 1; // Le falta el Enter
-            } else {
-                falta_enter = 0; // Sí lo tiene
-            }
-
-            linea[strcspn(linea, "\r\n")] = 0; // Limpiar salto de línea
+            falta_enter = (linea[strlen(linea) - 1] != '\n');
+            linea[strcspn(linea, "\r\n")] = 0;
 
             char *id_str     = strtok(linea, "-");
             char *nombre_txt = strtok(NULL, "-");
             char *user_txt   = strtok(NULL, "-");
-            char *pass_txt   = strtok(NULL, "-");
-
-            // Actualizamos el ID más alto encontrado
+            
             if (id_str != NULL) {
                 int id_actual = atoi(id_str);
-                if (id_actual > max_id) {
-                    max_id = id_actual;
-                }
+                if (id_actual > max_id) max_id = id_actual;
             }
 
-            // Comprobamos si el usuario ya está pillado
             if (user_txt != NULL && strcmp(user_txt, nuevo_usuario) == 0) {
-                printf("\nError: El usuario '%s' ya existe. Intenta con otro.\n", nuevo_usuario);
+                printf("\nError: El usuario '%s' ya existe.\n", nuevo_usuario);
                 fclose(f_lectura);
-                return 0; // Fallo en el registro, devolvemos 0
+                return 0;
             }
         }
         fclose(f_lectura);
     }
 
-    // PASO 2: Pedir el resto de los datos
-    while (getchar() != '\n'); // Limpiamos el buffer del teclado por el scanf anterior
-
+    // 2. VALIDACIÓN DEL NOMBRE REAL
+    while (getchar() != '\n'); 
     printf("Introduce tu nombre real o apodo (max 20 caracteres): ");
-    // Usamos fgets para que el nombre pueda tener espacios (ej: "Paco Perez")
-    fgets(nuevo_nombre, 21, stdin);
-    nuevo_nombre[strcspn(nuevo_nombre, "\r\n")] = 0; // Limpiar el salto de línea del Enter
+    fgets(temp, 100, stdin);
+    temp[strcspn(temp, "\r\n")] = 0; 
 
-    printf("Elige una contrasena (max 8 caracteres, sin espacios): ");
-    scanf("%8s", nueva_contra);
-
-    // PASO 3: Guardar el nuevo jugador en el fichero
-    // Usamos "a" (append) para añadir texto al final sin borrar lo que ya hay
-    FILE *f_escritura = fopen("Jugadores.txt", "a");
-    if (f_escritura == NULL) {
-        printf("\nError: No se pudo guardar el registro en la base de datos.\n");
+    if (strlen(temp) > 20) {
+        printf("\nError: El nombre es demasiado largo (max 20 caracteres).\n");
         return 0;
     }
-    if (falta_enter == 1) {
-        fprintf(f_escritura, "\n");
+    strcpy(nuevo_nombre, temp);
+
+    // 3. VALIDACIÓN DE LA CONTRASEÑA
+    printf("Elige una contrasena (max 8 caracteres): ");
+    scanf("%99s", temp);
+    if (strlen(temp) > 8) {
+        printf("\nError: La contrasena es demasiado larga (max 8 caracteres).\n");
+        while (getchar() != '\n');
+        return 0;
     }
+    strcpy(nueva_contra, temp);
+
+    // PASO 3: Guardar el nuevo jugador
+    FILE *f_escritura = fopen("Jugadores.txt", "a");
+    if (f_escritura == NULL) {
+        printf("\nError: No se pudo acceder a la base de datos.\n");
+        return 0;
+    }
+    if (falta_enter) fprintf(f_escritura, "\n");
     
-    // Escribimos la línea con el formato exacto: ID-Nombre-Usuario-Contraseña
-    // %02d asegura que el ID siempre tenga 2 dígitos (ej: 01, 05, 12)
     fprintf(f_escritura, "%02d-%s-%s-%s\n", max_id + 1, nuevo_nombre, nuevo_usuario, nueva_contra);
     fclose(f_escritura);
 
     printf("\n¡Registro completado con exito! Ya puedes iniciar sesion.\n");
-    return 1; // Éxito
+    return 1;
 }
 
 void mostrar_menu_principal(Partida *estado) {

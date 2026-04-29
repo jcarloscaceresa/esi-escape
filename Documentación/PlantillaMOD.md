@@ -528,21 +528,140 @@ Se definen las 4 rutas necesarias para cubrir toda la lógica de la función:
 | **CP-RB-11** | Objeto en sala | "OB01" | Localiz: "01" | "No tienes ese objeto en tu inventario." |
 | **CP-RB-12** | Soltar objeto | "OB01" | Localiz: "Inventario" | "Has soltado: [Objeto] en la sala." |
 
-![Grafo de Flujo de Control - iniciar_sesion](Grafo2.jpg)
+![Grafo de Flujo de Control - soltar_objeto](Grafo2.jpg)
 
-### Prueba de integración
+* **Prueba de ruta básica (Función `inventario`)**: 
+#### Detalle de Prueba de Ruta Básica (Miembro: Francisco Arthur Teixeira Moreira)
+Código:
+```c
+void inventario(Partida *estado) {
+    printf("\n--- TU INVENTARIO ---\n");
+    int hay_objetos = 0;
+    
+    // Listar todos los objetos del inventario con sus descripciones
+    for (int i = 0; i < estado->num_objetos; i++) {
+        if (strcmp(estado->objetos[i].Localiz, "Inventario") == 0) {
+            printf(" - [%s] %s: %s\n", 
+                   estado->objetos[i].Id_obj, 
+                   estado->objetos[i].Nomb_obj, 
+                   estado->objetos[i].Descrip);
+            hay_objetos = 1;
+        }
+    }
+    if (!hay_objetos) printf("Tu inventario esta vacio.\n");
+}
+```
+
+Se aplica la técnica de Caja Blanca sobre la función `inventario` para verificar el flujo de
+escritura de los objetos del inventario (o de un mensaje avisando que no hay ninguno en
+caso de que sea así) en pantalla.
+
+**A. Grafo de Flujo de Control (CFG)**
+* **(1)** Inicio de la función, printf de cabecera e inicialización hay_objetos = 0.
+* **(2)** Nodo Predicado: Condición del bucle for (i < estado->num_objetos).
+* **(3)** Nodo Predicado: Condición del if (strcmp(...) == 0)
+* **(4)** Cuerpo del if: printf del objeto y asignación hay_objetos = 1.
+* **(5)** Incremento de i y retorno al inicio del bucle for.
+* **(6)** Salida del bucle for hacia la siguiente instrucción.
+* **(7)** Nodo Predicado: Condición final if (!hay_objetos).
+* **(8)** printf de "Tu inventario esta vacio".
+* **(9)** Fin de la función.
+
+
+**B. Complejidad Ciclomática $V(G)$**
+Calculada según los métodos de la ingeniería de software:
+1.  **Nodos Predicado ($NNP$)**: Se identifican 3 nodos de decisión (2, 3 y 7).
+    $$V(G) = NNP + 1 = 3 + 1 = \mathbf{4}$$
+2.  **Regiones**: El grafo de flujo resultante define **4 regiones** (3 cerradas por el bucle y las condiciones, y 1 abierta).
+3.  **Aristas ($NA$) y Nodos ($NN$)**: $V(G) = 11 \text{ aristas} - 9 \text{ nodos} + 2 = \mathbf{4}$.
+
+**C. Conjunto de Rutas Linealmente Independientes**
+Se definen las 4 rutas básicas para garantizar la cobertura de todas las ramas:
+* **Ruta 1 (Cero objetos en sistema)**: $1 \rightarrow 2 \rightarrow 6 \rightarrow 7 \rightarrow 8 \rightarrow 9$ (El bucle no se ejecuta, el inventario resulta vacío).
+* **Ruta 2 (Objetos fuera de inventario)**: $1 \rightarrow 2 \rightarrow 3 \rightarrow 5 \rightarrow 2 \dots \rightarrow 6 \rightarrow 7 \rightarrow 8 \rightarrow 9$ (Se recorre el bucle pero nunca se cumple la condición de localización).
+* **Ruta 3 (Inventario con éxito)**: $1 \rightarrow 2 \rightarrow 3 \rightarrow 4 \rightarrow 5 \rightarrow 2 \dots \rightarrow 6 \rightarrow 7 \rightarrow 9$ (Se encuentra al menos un objeto y se evita el mensaje de error final).
+* **Ruta 4 (Combinación de objetos)**: Cubre el paso por el Nodo 3 tanto en su rama verdadera como falsa en una misma ejecución del bucle.
+
+**D. Casos de Prueba Generados**
+| ID Caso | Descripción | Estado de `estado` | Resultado Esperado |
+| :--- | :--- | :--- | :--- |
+| **CP-RB-01** | Sistema vacío | `num_objetos = 0` | "Tu inventario esta vacio." |
+| **CP-RB-02** | Inventario vacío | `Localiz = "01"` (en todos) | "Tu inventario esta vacio." |
+| **CP-RB-03** | Posee objetos | `Localiz = "Inventario"` | Listado de objetos detallado. |
+| **CP-RB-04** | Mixto | 1 en sala, 1 en inventario | Listado de 1 objeto (sin mensaje de vacío). |
+
+![Grafo de Flujo de Control - inventario](Grafo3.jpg)
+
+# Prueba de integración
 Se probó la concurrencia asimétrica del guardado de datos. Al guardar el progreso de un Jugador A, el módulo `memoria.c` demostró su capacidad para clonar en el fichero `Partida.txt` las líneas intactas de los Jugadores B y C, actualizando únicamente la situación de A mediante la lógica de exclusión de ID de usuario.
 
-### Plan de pruebas de aceptación
+## Plan de pruebas de aceptación
 Se ha documentado la secuencia de comandos necesaria para completar el juego, confirmando que la integración de todos los módulos es funcional.
 
-1. **Fase 1: Entrada**: Inicio en **01 (Conserjería)**. Recogida de **OB01** y uso para abrir las **02 (Escaleras)**. Recogida de **OB03**.
-2. **Fase 2: Administración**: En **05 (Secretaría)** se recoge **OB02** y se resuelve el puzle **P05** (Respuesta: `2014`) para llegar a la **25 (Sala de Juntas)** y obtener la credencial **OB10**.
-3. **Fase 3: Biblioteca**: Uso de **OB03** en la sala **02** para activar el **13 (Ascensor)**. En la **10 (Biblioteca)** se recoge el **OB06**. Resolución de **P15** (Respuesta: `PUERTO_REAL`) para salir al **14 (Patio)**.
-4. **Fase 4: Tour Sur**: Uso de **OB06** para entrar al **15 (Aula Magna)**. Resolución de **P06** (`1220`) y **P13** (`ESPINOSA`) para avanzar por las salas **21** y **22**. Uso de **OB10** y **OB02** para acceder a la **19 (Zona de Máquinas)**.
-5. **Fase 5: Ciencias**: Resolución de **P01** (`4500`) en la sala **02** para abrir el **06 (Pasillo Norte)** y explorar laboratorios secundarios.
-6. **Fase 6: La Gran Huida**: En el **06**, resolución de **P03** (`1224`) para entrar al **08 (Taller)** y coger **OB07 (Llave de Vaso)**. Uso de **OB07** para entrar al **29 (Muelle)** y resolución del puzle final **P10** (`7744`).
-7. **Final**: Movimiento a la sala **30 (Exterior)**. El sistema reconoce el tipo de sala como **"SALIDA"** e imprime el mensaje de victoria.
+### Fase 1: Acceso al Edificio
+* **Inicio en 01 (Conserjería)**.
+* **Acción:** `Coger OB01` (Tarjeta Laboratorio).
+* **Acción:** `Usar OB01` para desbloquear la conexión **C01** hacia la sala 02.
+* **Movimiento:** `Entrar sala 02` (Escalera principal).
+* **Acción:** `Coger OB03` (Nota arrugada).
+
+### Fase 2: Administración y Credenciales
+* **Movimiento:** `Entrar sala 01` (La conexión C02 está activa por defecto).
+* **Movimiento:** `Entrar sala 05` (Secretaría).
+* **Acción:** `Coger OB02` (Destornillador).
+* **Acción:** `Resolver P05` (Caja Fuerte). Solución: **2014**. Esto desbloquea la conexión **C07**.
+* **Movimiento:** `Entrar sala 12` (Despacho de Dirección).
+* **Movimiento:** `Entrar sala 25` (Sala de Juntas) (C09 está activa).
+* **Acción:** `Coger OB10` (Credencial de Delegado).
+* **Retroceso necesario:**
+    1.  `Entrar sala 12` (vía C10 activa).
+    2.  `Entrar sala 05` (vía C08 activa).
+    3.  `Entrar sala 01` (vía C06 activa).
+
+### Fase 3: El Ascensor y el Patio Interior
+* **Movimiento:** `Entrar sala 02`.
+* **Acción:** `Usar OB03` (Nota) para desbloquear la conexión **C11** hacia el Ascensor.
+* **Movimiento:** `Entrar sala 13` (Ascensor).
+* **Movimiento:** `Entrar sala 10` (Biblioteca) (C15 está activa).
+* **Acción:** `Coger OB06` (Manual de Usuario).
+* **Retroceso necesario:**
+    1.  `Entrar sala 13` (vía C16 activa).
+    2.  `Entrar sala 02` (vía C12 activa).
+    3.  `Entrar sala 01` (vía C02 activa).
+* **Acción (en sala 01):** `Resolver P15` (Plano ESI). Solución: **PUERTO_REAL**. Esto desbloquea la conexión **C03**.
+* **Movimiento:** `Entrar sala 14` (Patio Interior).
+
+### Fase 4: Ala Sur y Zona de Máquinas
+* **Acción (en sala 14):** `Usar OB06` (Manual) para desbloquear **C21**.
+* **Movimiento:** `Entrar sala 15` (Aula Magna).
+* **Acción:** `Resolver P06` (Panel Luces). Solución: **1220**. Desbloquea **C23**.
+* **Movimiento:** `Entrar sala 21` (Sala de Grados).
+* **Acción:** `Resolver P13` (Actas Grados). Solución: **ESPINOSA**. Desbloquea **C25**.
+* **Movimiento:** `Entrar sala 22` (Despachos de Profesorado).
+* **Acción:** `Usar OB10` (Credencial) para desbloquear **C27**.
+* **Movimiento:** `Entrar sala 17` (Delegación de Alumnos).
+* **Acción:** `Usar OB02` (Destornillador) para desbloquear **C29**.
+* **Movimiento:** `Entrar sala 19` (Zona de Máquinas).
+* **Acción:** `Coger OB08` (Tarjeta de Cafetería).
+* **Acción:** `Resolver P07` (Vending). Solución: **REFRESCO**. Desbloquea **C31**.
+* **Movimiento:** `Entrar sala 03` (Cafetería).
+
+### Fase 5: Acceso a Laboratorios
+* **Movimiento:** `Entrar sala 02` desde la Cafetería (pasando por sala 19, 17, 22, 21, 15, 14 y 01, o directamente si existen conexiones activas de retorno).
+* **Acción (en sala 02):** `Resolver P01` (Puzle panel). Solución: **4500**. Desbloquea **C13** hacia el Pasillo Norte.
+* **Movimiento:** `Entrar sala 06` (Pasillo Norte).
+
+### Fase 6: La Gran Huida
+* **Acción (en sala 06):** `Resolver P03` (Puerta Taller). Solución: **1224**. Desbloquea **C55**.
+* **Movimiento:** `Entrar sala 08` (Taller de Mecánica).
+* **Acción:** `Coger OB07` (Llave de Vaso).
+* **Acción:** `Usar OB07` para desbloquear **C57** hacia el Muelle.
+* **Movimiento:** `Entrar sala 29` (Muelle de Carga).
+* **Acción:** `Resolver P10` (Muelle Carga). Solución: **7744**. Desbloquea la salida final **C61**.
+
+### Final
+* **Movimiento:** `Entrar sala 30` (Exterior).
+* **Resultado:** El sistema detecta que la sala 30 es de tipo **"SALIDA"**. Se muestra el mensaje de victoria y finaliza la aventura.
 
 ***
 
